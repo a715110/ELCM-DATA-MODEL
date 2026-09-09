@@ -1,0 +1,60 @@
+package com.dodaso.ecosystem.elcm.entity.property;
+
+import jakarta.persistence.*;
+import java.time.LocalDateTime;
+import java.io.Serializable;
+import lombok.Getter;
+import lombok.Setter;
+
+/**
+ * Maps to elcm.address -- generated from the authoritative dodaso-platform.dbs
+ * schema (elcm.sql export), not hand-written. Relationships are
+ * unidirectional (owning side only, no inverse @OneToMany collections) to
+ * keep this first pass simple -- add inverse collections later only where a
+ * real query need shows up for one. All @ManyToOne/@OneToOne use
+ * FetchType.LAZY deliberately (JPA defaults @ManyToOne to EAGER, which is
+ * usually wrong). created_at/updated_at are insertable=false, updatable=false
+ * -- the database's own DEFAULT/ON UPDATE CURRENT_TIMESTAMP owns those
+ * values, not the application.
+ */
+@Entity
+@Table(name = "address")
+@Getter
+@Setter
+public class Address implements Serializable {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private Long id;
+
+    @Column(name = "address_line1", nullable = false, length = 255)
+    private String addressLine1;
+
+    @Column(name = "address_line2", length = 255)
+    private String addressLine2;
+
+    @Column(name = "city", nullable = false, length = 150)
+    private String city;
+
+    @Column(name = "state", length = 100)
+    private String state;
+
+    @Column(name = "zip", length = 20)
+    private String zip;
+
+    @Column(name = "country", nullable = false, length = 100)
+    private String country;
+
+    @Column(name = "created_by", length = 255)
+    private String createdBy;
+
+    @Column(name = "created_at", nullable = false, insertable = false, updatable = false)
+    private LocalDateTime createdAt;
+
+    @Column(name = "updated_by", length = 255)
+    private String updatedBy;
+
+    @Column(name = "updated_at", nullable = false, insertable = false, updatable = false)
+    private LocalDateTime updatedAt;
+}
