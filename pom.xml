@@ -20,7 +20,8 @@
   <properties>
     <build.number>1.0.0-SNAPSHOT</build.number>
     <java.version>21</java.version>
-    <joinfaces.version>5.5.15</joinfaces.version>
+    <joinfaces.version>5.0.4</joinfaces.version>
+    <!-- <joinfaces.version>5.5.15</joinfaces.version> -->
     <!-- Explicit override: joinfaces-dependencies' own managed PrimeFaces
          version can lag behind PrimeFaces' actual releases. Declaring this
          property here (before/alongside the joinfaces-dependencies BOM
