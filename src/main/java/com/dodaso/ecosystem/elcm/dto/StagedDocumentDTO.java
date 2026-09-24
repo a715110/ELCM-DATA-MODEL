@@ -28,8 +28,7 @@ public class StagedDocumentDTO extends BaseDTO implements Serializable {
 
   private Long id;
 
-  private String fileName;
-  private String blobUri;
+  private Long fileUploadId;
   private WorkspaceDTO workspaceDTO;
   private LkpContractTypeDTO contractTypeDTO;
   private ContractRecordDTO targetRecordDTO;

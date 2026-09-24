@@ -31,11 +31,8 @@ public class StagedDocument implements Serializable {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "file_name", nullable = false, length = 255)
-    private String fileName;
-
-    @Column(name = "blob_uri", nullable = false, length = 1000)
-    private String blobUri;
+    @Column(name = "file_upload_id", nullable = false)
+    private Long fileUploadId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "workspace_id", nullable = false)
