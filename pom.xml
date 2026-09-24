@@ -14,14 +14,13 @@
     <artifactId>spring-boot-starter-parent</artifactId>
     <groupId>org.springframework.boot</groupId>
     <relativePath/>
-    <version>3.4.2</version>
+    <version>3.5.16</version> <!-- SB3.5.16: was 3.4.2 -->
   </parent>
 
   <properties>
     <build.number>1.0.0-SNAPSHOT</build.number>
     <java.version>21</java.version>
-    <joinfaces.version>5.0.4</joinfaces.version>
-    <!-- <joinfaces.version>5.5.15</joinfaces.version> -->
+    <joinfaces.version>5.5.15</joinfaces.version> <!-- SB3.5.16: was 5.0.4 (Boot 3.0-era) -->
     <!-- Explicit override: joinfaces-dependencies' own managed PrimeFaces
          version can lag behind PrimeFaces' actual releases. Declaring this
          property here (before/alongside the joinfaces-dependencies BOM
