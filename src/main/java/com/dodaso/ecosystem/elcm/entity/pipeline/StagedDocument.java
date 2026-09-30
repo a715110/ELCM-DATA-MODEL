@@ -19,6 +19,16 @@ import lombok.Setter;
  * usually wrong). created_at/updated_at are insertable=false, updatable=false
  * -- the database's own DEFAULT/ON UPDATE CURRENT_TIMESTAMP owns those
  * values, not the application.
+ *
+ * ADDED 2026-09-29 -- newRecordName/newRecordCounterparty/
+ * newRecordPropertyAddress/existingRecordQuery: capture the Upload Files
+ * dialog's New Record / Existing Record destination sub-panel input
+ * directly on this row, rather than creating a real ContractRecord/
+ * Property/Address at upload time -- no such entities exist yet for this
+ * pass (see chat). A Preparer is expected to use these to actually create
+ * the real record later. See staged_document_new_columns.sql for the DDL.
+ * All four nullable -- only the pair matching the row's routingIntent is
+ * ever populated (see StageDocumentService.createStagedDocuments()).
  */
 @Entity
 @Table(name = "staged_document")
@@ -45,6 +55,18 @@ public class StagedDocument implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "target_record_id", nullable = true)
     private ContractRecord targetRecord;
+
+    @Column(name = "new_record_name", length = 255)
+    private String newRecordName;
+
+    @Column(name = "new_record_counterparty", length = 255)
+    private String newRecordCounterparty;
+
+    @Column(name = "new_record_property_address", length = 500)
+    private String newRecordPropertyAddress;
+
+    @Column(name = "existing_record_query", length = 255)
+    private String existingRecordQuery;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "routing_intent_id", nullable = false)

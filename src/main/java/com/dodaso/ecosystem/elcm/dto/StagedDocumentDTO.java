@@ -18,6 +18,12 @@ import lombok.Setter;
  * "DTO") rather than the JPA entity types, per the ecws-data-model
  * convention. Instances are placed into the matching StagedDocumentDTOContainer
  * before being passed to/from the service layer.
+ *
+ * ADDED 2026-09-29 -- newRecordName/newRecordCounterparty/
+ * newRecordPropertyAddress/existingRecordQuery: see the matching entity
+ * fields' Javadoc. Only the pair matching routingIntentDTO's code is ever
+ * populated by a caller (UploadFilesService.submitToPipeline() on the
+ * elcm-ui side).
  */
 @Getter
 @Setter
@@ -32,6 +38,10 @@ public class StagedDocumentDTO extends BaseDTO implements Serializable {
   private WorkspaceDTO workspaceDTO;
   private LkpContractTypeDTO contractTypeDTO;
   private ContractRecordDTO targetRecordDTO;
+  private String newRecordName;
+  private String newRecordCounterparty;
+  private String newRecordPropertyAddress;
+  private String existingRecordQuery;
   private LkpRoutingIntentDTO routingIntentDTO;
   private String assigneeId;
   private LkpStagedDocumentStatusDTO statusDTO;
