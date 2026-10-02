@@ -18,6 +18,19 @@ import lombok.Setter;
  * usually wrong). created_at/updated_at are insertable=false, updatable=false
  * -- the database's own DEFAULT/ON UPDATE CURRENT_TIMESTAMP owns those
  * values, not the application.
+ *
+ * ADDED 2026-10-01 -- counterparty: previously there was no counterparty
+ * concept anywhere in the schema at all, even though the Upload Files
+ * dialog's New Record sub-panel has collected a Counterparty field from day
+ * one (see StagedDocument.newRecordCounterparty) -- that data had nowhere
+ * to permanently land once a staged submission is promoted into a real
+ * record. Modeled as its own table (elcm.counterparty, see that entity's
+ * Javadoc) rather than a plain varchar column here, since the same
+ * counterparty can be party to more than one lease record over time.
+ * Nullable for now, matching staged_document.target_record_id's own
+ * nullable precedent -- existing/legacy contract_record rows predate this
+ * column and a real "Promote to Record" workflow to populate it on new ones
+ * doesn't exist yet either (see Counterparty's Javadoc).
  */
 @Entity
 @Table(name = "contract_record")
@@ -40,6 +53,10 @@ public class ContractRecord implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "workspace_id", nullable = false)
     private Workspace workspace;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "counterparty_id", nullable = true)
+    private Counterparty counterparty;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "status_id", nullable = false)
