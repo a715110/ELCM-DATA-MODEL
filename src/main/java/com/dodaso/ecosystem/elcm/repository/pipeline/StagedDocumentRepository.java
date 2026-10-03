@@ -37,9 +37,24 @@ public interface StagedDocumentRepository extends JpaRepository<StagedDocument, 
      * more JOIN FETCHes than are actually used would just add cost (and, for
      * more than one *collection* fetch, risk a Cartesian product) with
      * nothing to show for it.
+     *
+     * REVISED 2026-10-03 -- added LEFT JOIN FETCH on targetRecord's own
+     * counterparty/contractType/status/workspace: the Stage Documents
+     * dashboard's new Record-column hover preview (see
+     * StageDocumentService.toDraft()) reads all four off the linked
+     * ContractRecord, which are themselves LAZY @ManyToOne associations on
+     * ContractRecord (same reasoning as workspace/targetRecord above -- read
+     * them lazily post-transaction and it's a silent null, not an
+     * exception, same trap this method's original fix already covers).
+     * Still no Cartesian-product risk: every one of these is a
+     * single-valued (@ManyToOne) association, never a collection.
      */
     @Query("SELECT s FROM StagedDocument s "
         + "JOIN FETCH s.workspace "
-        + "LEFT JOIN FETCH s.targetRecord")
+        + "LEFT JOIN FETCH s.targetRecord tr "
+        + "LEFT JOIN FETCH tr.counterparty "
+        + "LEFT JOIN FETCH tr.contractType "
+        + "LEFT JOIN FETCH tr.status "
+        + "LEFT JOIN FETCH tr.workspace")
     List<StagedDocument> findAllWithWorkspaceAndTargetRecord();
 }

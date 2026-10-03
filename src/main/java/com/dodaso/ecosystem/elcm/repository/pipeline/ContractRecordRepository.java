@@ -3,7 +3,10 @@ package com.dodaso.ecosystem.elcm.repository.pipeline;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import com.dodaso.ecosystem.elcm.entity.pipeline.ContractRecord;
 
@@ -25,6 +28,31 @@ public interface ContractRecordRepository extends JpaRepository<ContractRecord, 
      * rather than arbitrary DB order.
      */
     List<ContractRecord> findTop20ByRecordCodeContainingIgnoreCaseOrderByRecordCode(String recordCodeFragment);
+
+    /**
+     * ADDED 2026-10-02 -- extends the Existing Record autocomplete to also
+     * match on counterparty name (per explicit decision in chat: counterparty
+     * only for now, more fields later based on feedback). Substring-anywhere,
+     * case-insensitive, same as the record-code-only method above and same
+     * "top 20, ordered by recordCode" shape -- this is still a type-ahead
+     * list, not a results page.
+     *
+     * A derived-method name for "record code contains X OR counterparty name
+     * contains X" isn't expressible cleanly (Spring Data has no OR-across-a-
+     * relationship derivation that reads well), so this is a plain JPQL
+     * @Query instead. LEFT JOIN on counterparty (not INNER) so records with
+     * no counterparty on file (counterparty_id is nullable -- see
+     * ContractRecord's Javadoc) still match on record code alone.
+     *
+     * JPQL has no "Top20" derivation like the method above, so the caller
+     * passes PageRequest.of(0, 20) as pageable to get the same cap (see
+     * RecordProvisioningService.search()).
+     */
+    @Query("SELECT DISTINCT cr FROM ContractRecord cr LEFT JOIN cr.counterparty cp "
+        + "WHERE LOWER(cr.recordCode) LIKE LOWER(CONCAT('%', :fragment, '%')) "
+        + "OR LOWER(cp.name) LIKE LOWER(CONCAT('%', :fragment, '%')) "
+        + "ORDER BY cr.recordCode")
+    List<ContractRecord> searchTop20ByRecordCodeOrCounterpartyName(@Param("fragment") String fragment, Pageable pageable);
 
     /**
      * Feeds the sequential record_code generator (see
