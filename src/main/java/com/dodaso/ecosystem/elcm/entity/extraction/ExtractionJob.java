@@ -8,6 +8,11 @@ import java.time.LocalDateTime;
 import java.io.Serializable;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 /**
  * Maps to elcm.extraction_job -- generated from the authoritative dodaso-platform.dbs
@@ -21,6 +26,7 @@ import lombok.Setter;
  * values, not the application.
  */
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 @Table(name = "extraction_job")
 @Getter
 @Setter
@@ -58,15 +64,19 @@ public class ExtractionJob implements Serializable {
     @Column(name = "duration_seconds")
     private Integer durationSeconds;
 
-    @Column(name = "created_by", length = 255)
+    @CreatedBy
+    @Column(name = "created_by", updatable = false, length = 255)
     private String createdBy;
 
-    @Column(name = "created_at", nullable = false, insertable = false, updatable = false)
+    @CreatedDate
+    @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
+    @LastModifiedBy
     @Column(name = "updated_by", length = 255)
     private String updatedBy;
 
-    @Column(name = "updated_at", nullable = false, insertable = false, updatable = false)
+    @LastModifiedDate
+    @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 }

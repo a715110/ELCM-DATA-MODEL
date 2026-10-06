@@ -7,6 +7,11 @@ import java.time.LocalDateTime;
 import java.io.Serializable;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 /**
  * Maps to elcm.contract_record_relationship -- generated from the authoritative dodaso-platform.dbs
@@ -20,6 +25,7 @@ import lombok.Setter;
  * values, not the application.
  */
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 @Table(name = "contract_record_relationship", uniqueConstraints = {@UniqueConstraint(columnNames = {"predecessor_record_id", "relationship_type_id"})})
 @Getter
 @Setter
@@ -52,15 +58,19 @@ public class ContractRecordRelationship implements Serializable {
     @Column(name = "notes", length = 1000)
     private String notes;
 
-    @Column(name = "created_by", length = 255)
+    @CreatedBy
+    @Column(name = "created_by", updatable = false, length = 255)
     private String createdBy;
 
-    @Column(name = "created_at", nullable = false, insertable = false, updatable = false)
+    @CreatedDate
+    @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
+    @LastModifiedBy
     @Column(name = "updated_by", length = 255)
     private String updatedBy;
 
-    @Column(name = "updated_at", nullable = false, insertable = false, updatable = false)
+    @LastModifiedDate
+    @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 }
