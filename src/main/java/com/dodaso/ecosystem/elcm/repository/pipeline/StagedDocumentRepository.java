@@ -48,6 +48,12 @@ public interface StagedDocumentRepository extends JpaRepository<StagedDocument, 
      * exception, same trap this method's original fix already covers).
      * Still no Cartesian-product risk: every one of these is a
      * single-valued (@ManyToOne) association, never a collection.
+     *
+     * REVISED 2026-10-07 -- the WHERE NOT EXISTS leaves out documents that
+     * already belong to a package: once grouped, a document is worked on
+     * through its package, not through this inbox list. Removing it from a
+     * draft package makes it appear here again. StagedDocument's
+     * @SQLRestriction (deleted_at IS NULL) still applies on top.
      */
     @Query("SELECT s FROM StagedDocument s "
         + "JOIN FETCH s.workspace "
@@ -55,6 +61,7 @@ public interface StagedDocumentRepository extends JpaRepository<StagedDocument, 
         + "LEFT JOIN FETCH tr.counterparty "
         + "LEFT JOIN FETCH tr.contractType "
         + "LEFT JOIN FETCH tr.status "
-        + "LEFT JOIN FETCH tr.workspace")
+        + "LEFT JOIN FETCH tr.workspace "
+        + "WHERE NOT EXISTS (SELECT pd.id FROM PackageDocument pd WHERE pd.stagedDocument = s)")
     List<StagedDocument> findAllWithWorkspaceAndTargetRecord();
 }

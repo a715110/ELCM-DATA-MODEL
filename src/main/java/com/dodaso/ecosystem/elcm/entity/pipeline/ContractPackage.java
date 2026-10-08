@@ -22,6 +22,12 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
  * usually wrong). created_at/updated_at are insertable=false, updatable=false
  * -- the database's own DEFAULT/ON UPDATE CURRENT_TIMESTAMP owns those
  * values, not the application.
+ *
+ * ADDED 2026-10-07 -- assigneeId: the IAMS login id of the person the
+ * package is assigned to, chosen in the Create Document Set dialog. Until now
+ * the packages table used created_by as a stand-in because this table had no
+ * assignee column (see ContractPackageService). Nullable. See
+ * contract_package_assignee.sql for the DDL.
  */
 @Entity
 @EntityListeners(AuditingEntityListener.class)
@@ -49,6 +55,9 @@ public class ContractPackage implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "status_id", nullable = false)
     private LkpPackageStatus status;
+
+    @Column(name = "assignee_id", length = 255)
+    private String assigneeId;
 
     @CreatedBy
     @Column(name = "created_by", updatable = false, length = 255)
