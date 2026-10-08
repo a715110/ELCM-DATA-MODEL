@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 import java.io.Serializable;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.SQLRestriction;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
@@ -50,10 +51,20 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
  * record they picked from the autocomplete is resolved immediately via
  * StagedDocumentDTO.existingRecordId and is never itself persisted here
  * (targetRecord_id already captures the result).
+ *
+ * ADDED 2026-10-07 -- soft delete. deletedAt/deletedBy/deleteReason are set
+ * by StageDocumentService.deleteStaged(); a row is active when deleted_at is
+ * null. @SQLRestriction makes Hibernate append "deleted_at IS NULL" to every
+ * query against this entity (findAll, the JOIN FETCH query, the metric
+ * counts, findById), so deleted rows disappear from the list and the
+ * metrics in one place and no individual query has to remember the filter.
+ * The row itself is kept for the audit trail. See
+ * staged_document_soft_delete.sql for the DDL.
  */
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "staged_document")
+@SQLRestriction("deleted_at IS NULL")
 @Getter
 @Setter
 public class StagedDocument implements Serializable {
@@ -146,4 +157,16 @@ public class StagedDocument implements Serializable {
     @LastModifiedDate
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
+
+    /** UTC, like the audit columns. Null while the document is active. */
+    @Column(name = "deleted_at")
+    private LocalDateTime deletedAt;
+
+    /** Login id of whoever deleted the document. */
+    @Column(name = "deleted_by", length = 255)
+    private String deletedBy;
+
+    /** Optional free-text reason typed into the confirmation dialog. */
+    @Column(name = "delete_reason", length = 500)
+    private String deleteReason;
 }

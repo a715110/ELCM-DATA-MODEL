@@ -13,4 +13,8 @@ public interface PackageDocumentRepository extends JpaRepository<PackageDocument
     // submission validation rule (SDS 4.1): a package can't submit while
     // any document's role is UNDEFINED.
     long countByContractPackage_IdAndDocumentRole_CodeNot(Long packageId, String undefinedCode);
+
+    // ADDED 2026-10-07 -- used by StageDocumentService.deleteStaged(): a
+    // staged document that already belongs to a package cannot be deleted.
+    boolean existsByStagedDocument_Id(Long stagedDocumentId);
 }
