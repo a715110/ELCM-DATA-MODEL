@@ -55,6 +55,16 @@ public class Submission implements Serializable {
     @Column(name = "claimed_at")
     private LocalDateTime claimedAt;
 
+    /** ADDED 2026-10-12 -- set when a reviewer declines the package back to Assembly (see decline_status.sql). */
+    @Column(name = "decline_reason", length = 1000)
+    private String declineReason;
+
+    @Column(name = "declined_by", length = 255)
+    private String declinedBy;
+
+    @Column(name = "declined_at")
+    private LocalDateTime declinedAt;
+
     @CreatedBy
     @Column(name = "created_by", updatable = false, length = 255)
     private String createdBy;
