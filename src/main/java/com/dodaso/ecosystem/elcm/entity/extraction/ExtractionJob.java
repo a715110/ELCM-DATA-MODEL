@@ -64,6 +64,22 @@ public class ExtractionJob implements Serializable {
     @Column(name = "duration_seconds")
     private Integer durationSeconds;
 
+    /** ADDED 2026-10-11 -- how many times the worker has started this job (see extraction_wiring.sql). */
+    @Column(name = "attempt_count", nullable = false)
+    private Integer attemptCount = 0;
+
+    /** Why the last attempt failed; cleared when the job completes. */
+    @Column(name = "error_message", length = 1000)
+    private String errorMessage;
+
+    /** The model the extractor reported it actually ran. */
+    @Column(name = "model_name", length = 100)
+    private String modelName;
+
+    /** Fields the reviewer must look at (invalid, unverified, required but missing). */
+    @Column(name = "needs_review_count")
+    private Integer needsReviewCount;
+
     @CreatedBy
     @Column(name = "created_by", updatable = false, length = 255)
     private String createdBy;

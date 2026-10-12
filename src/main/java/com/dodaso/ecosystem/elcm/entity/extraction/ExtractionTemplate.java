@@ -51,6 +51,10 @@ public class ExtractionTemplate implements Serializable {
     @Column(name = "is_active", nullable = false)
     private Boolean isActive;
 
+    /** ADDED 2026-10-11 -- the template id the extractor service knows it by (e.g. property_lease_v1). */
+    @Column(name = "extractor_template_id", length = 100)
+    private String extractorTemplateId;
+
     @CreatedBy
     @Column(name = "created_by", updatable = false, length = 255)
     private String createdBy;

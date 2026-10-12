@@ -66,6 +66,30 @@ public class ExtractionFieldResult implements Serializable {
     @Column(name = "corrected_value", length = 2000)
     private String correctedValue;
 
+    /** ADDED 2026-10-11 -- the extractor's own verdict: verified, unverified, invalid, missing, inferred_absent. */
+    @Column(name = "field_status", length = 30)
+    private String fieldStatus;
+
+    /** The sentence(s) from the document the value was read from. */
+    @Column(name = "quote", length = 2000)
+    private String quote;
+
+    /** Why the value was not verified (null when it was). */
+    @Column(name = "problem", length = 500)
+    private String problem;
+
+    /** Extra note from the extractor, e.g. a repaired quote. */
+    @Column(name = "note", length = 500)
+    private String note;
+
+    /** Other sentences that mention the topic, shown to the reviewer for unverified fields. */
+    @Column(name = "candidates", length = 2000)
+    private String candidates;
+
+    /** True when the reviewer must look at this field. */
+    @Column(name = "needs_review_flag", nullable = false)
+    private Boolean needsReviewFlag = false;
+
     @CreatedBy
     @Column(name = "created_by", updatable = false, length = 255)
     private String createdBy;
