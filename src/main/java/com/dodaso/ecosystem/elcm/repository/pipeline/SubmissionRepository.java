@@ -51,4 +51,19 @@ public interface SubmissionRepository extends JpaRepository<Submission, Long> {
                @Param("to") LkpSubmissionStatus to,
                @Param("by") String by,
                @Param("now") LocalDateTime now);
+
+    /**
+     * ADDED 2026-10-12 -- declines a submission in one conditional update: the status moves from
+     * "from" to DECLINED with the reason, who and when, only if it is still in "from". Returns 1
+     * when this caller won, 0 when someone else changed it first (a Retry, for example).
+     */
+    @Modifying
+    @Query("UPDATE Submission s SET s.status = :to, s.declineReason = :reason, s.declinedBy = :by, "
+        + "s.declinedAt = :now, s.updatedAt = :now WHERE s.id = :id AND s.status = :from")
+    int decline(@Param("id") Long id,
+                @Param("from") LkpSubmissionStatus from,
+                @Param("to") LkpSubmissionStatus to,
+                @Param("reason") String reason,
+                @Param("by") String by,
+                @Param("now") LocalDateTime now);
 }
