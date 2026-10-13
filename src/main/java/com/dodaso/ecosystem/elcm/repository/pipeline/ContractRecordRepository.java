@@ -1,5 +1,6 @@
 package com.dodaso.ecosystem.elcm.repository.pipeline;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -70,5 +71,11 @@ public interface ContractRecordRepository extends JpaRepository<ContractRecord, 
      * or a unique constraint on record_code with retry-on-conflict, not
      * implemented here.
      */
+    /**
+     * ADDED 2026-10-12 -- the records a reviewer may pick as a package's target when Apply finds
+     * none: same workspace, and only records in the given statuses (ACTIVE or PENDING).
+     */
+    List<ContractRecord> findByWorkspace_IdAndStatus_CodeInOrderByRecordCode(Long workspaceId, Collection<String> statusCodes);
+
     long countByWorkspace_CodeAndRecordCodeStartingWith(String workspaceCode, String recordCodePrefix);
 }
