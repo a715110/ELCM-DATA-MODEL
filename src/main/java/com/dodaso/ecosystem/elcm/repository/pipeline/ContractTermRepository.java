@@ -11,4 +11,10 @@ public interface ContractTermRepository extends JpaRepository<ContractTerm, Long
 
     /** Every value a field of the record ever had, newest first. */
     List<ContractTerm> findByContractRecord_IdAndFieldKeyOrderByAppliedAtDescIdDesc(Long contractRecordId, String fieldKey);
+
+    /** Every term in force, of all records (for the Contract Records list counts). */
+    List<ContractTerm> findBySupersededAtIsNull();
+
+    /** The values of a record that a later Apply replaced. */
+    List<ContractTerm> findByContractRecord_IdAndSupersededAtIsNotNull(Long contractRecordId);
 }
