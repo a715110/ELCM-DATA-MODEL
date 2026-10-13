@@ -37,4 +37,18 @@ public interface SubmissionRepository extends JpaRepository<Submission, Long> {
     @Modifying
     @Query("UPDATE Submission s SET s.updatedAt = :now WHERE s.id = :id")
     int touch(@Param("id") Long id, @Param("now") LocalDateTime now);
+
+    /**
+     * ADDED 2026-10-12 -- reopens a completed review in one conditional update: REVIEWED back to
+     * EXTRACTED, with who and when. Returns 1 when this caller won, 0 when the submission was no
+     * longer in the "from" status (for example applied in the meantime).
+     */
+    @Modifying
+    @Query("UPDATE Submission s SET s.status = :to, s.reopenedBy = :by, s.reopenedAt = :now, s.updatedAt = :now "
+        + "WHERE s.id = :id AND s.status = :from")
+    int reopen(@Param("id") Long id,
+               @Param("from") LkpSubmissionStatus from,
+               @Param("to") LkpSubmissionStatus to,
+               @Param("by") String by,
+               @Param("now") LocalDateTime now);
 }

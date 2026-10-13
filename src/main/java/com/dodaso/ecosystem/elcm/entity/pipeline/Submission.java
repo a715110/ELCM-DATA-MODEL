@@ -65,6 +65,13 @@ public class Submission implements Serializable {
     @Column(name = "declined_at")
     private LocalDateTime declinedAt;
 
+    /** ADDED 2026-10-12 -- who last reopened a completed review and when (see reopen_review.sql). */
+    @Column(name = "reopened_by", length = 255)
+    private String reopenedBy;
+
+    @Column(name = "reopened_at")
+    private LocalDateTime reopenedAt;
+
     @CreatedBy
     @Column(name = "created_by", updatable = false, length = 255)
     private String createdBy;
