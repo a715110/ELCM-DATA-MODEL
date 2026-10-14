@@ -85,6 +85,13 @@ public class Submission implements Serializable {
   @Column(name = "reviewed_at")
   private LocalDateTime reviewedAt;
 
+  /**
+   * ADDED 2026-10-14 -- what the submitter corrected when the package was submitted again after a
+   * decline (see submission_correction_note.sql). Null on a first submission.
+   */
+  @Column(name = "correction_note", length = 1000)
+  private String correctionNote;
+
   @CreatedBy
   @Column(name = "created_by", updatable = false, length = 255)
   private String createdBy;
