@@ -77,6 +77,10 @@ public class StagedDocument implements Serializable {
     @Column(name = "file_upload_id", nullable = false)
     private Long fileUploadId;
 
+    /** SHA-256 of the file content as lower-case hex; null for rows uploaded before 2026-10-14. */
+    @Column(name = "content_hash", length = 64)
+    private String contentHash;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "workspace_id", nullable = false)
     private Workspace workspace;

@@ -11,6 +11,10 @@ public interface StagedDocumentRepository extends JpaRepository<StagedDocument, 
 
     long countByStatus_Code(String code);
 
+    /** Active rows of one workspace whose content hash is in the list, newest first. */
+    List<StagedDocument> findByWorkspace_CodeAndContentHashInOrderByIdDesc(
+        String workspaceCode, java.util.Collection<String> hashes);
+
     /**
      * ADDED 2026-09-29 -- fixes StageDocumentService.toDraft() seeing
      * doc.getWorkspace() as null (reported as a null-vs-NPE symptom, but the
