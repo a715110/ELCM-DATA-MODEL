@@ -74,6 +74,10 @@ public class ExtractionFieldResult implements Serializable {
     @Column(name = "quote", length = 2000)
     private String quote;
 
+    /** Page of the document where the quote is; null when the extractor could not place it. */
+    @Column(name = "page_no")
+    private Integer pageNo;
+
     /** Why the value was not verified (null when it was). */
     @Column(name = "problem", length = 500)
     private String problem;
