@@ -87,4 +87,26 @@ public interface SubmissionRepository extends JpaRepository<Submission, Long> {
       @Param("reason") String reason,
       @Param("by") String by,
       @Param("now") LocalDateTime now);
+
+  /**
+   * ADDED 2026-10-14 -- every submission of a package that is not a draft, newest first, with the
+   * package, its workspace, status and target record loaded in the same query. Feeds the work
+   * queue, which keeps the first (newest) submission it sees for each package.
+   */
+  @Query(
+      "SELECT s FROM Submission s JOIN FETCH s.contractPackage p JOIN FETCH p.workspace "
+          + "JOIN FETCH p.status JOIN FETCH s.status LEFT JOIN FETCH p.targetRecord "
+          + "WHERE p.status.code <> 'ASSEMBLY' ORDER BY s.id DESC")
+  List<Submission> findForWorkQueue();
+
+  /**
+   * ADDED 2026-10-14 -- the submissions made by one person (login id compared without regard to
+   * case), newest first, with the package, workspace, statuses and target record loaded. Feeds the
+   * My Submissions screen.
+   */
+  @Query(
+      "SELECT s FROM Submission s JOIN FETCH s.contractPackage p JOIN FETCH p.workspace "
+          + "JOIN FETCH s.status LEFT JOIN FETCH p.targetRecord "
+          + "WHERE LOWER(s.submittedBy) = LOWER(:login) ORDER BY s.id DESC")
+  List<Submission> findBySubmitterDetailed(@Param("login") String login);
 }
