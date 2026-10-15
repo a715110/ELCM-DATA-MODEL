@@ -109,4 +109,18 @@ public interface SubmissionRepository extends JpaRepository<Submission, Long> {
           + "JOIN FETCH s.status LEFT JOIN FETCH p.targetRecord "
           + "WHERE LOWER(s.submittedBy) = LOWER(:login) ORDER BY s.id DESC")
   List<Submission> findBySubmitterDetailed(@Param("login") String login);
+
+  /**
+   * ADDED 2026-10-15 -- stale-work recovery: submissions in a status whose last heartbeat is before
+   * the given time. The database does the filtering, so the usual case (nothing stale) returns no
+   * rows instead of loading every PROCESSING submission.
+   */
+  List<Submission> findByStatus_CodeAndUpdatedAtBeforeOrderByIdAsc(
+      String statusCode, LocalDateTime before);
+
+  /**
+   * ADDED 2026-10-15 -- how many submissions in a status have an id up to and including the given
+   * one (queue position), counted in the database instead of loading every row.
+   */
+  long countByStatus_CodeAndIdLessThanEqual(String statusCode, Long id);
 }

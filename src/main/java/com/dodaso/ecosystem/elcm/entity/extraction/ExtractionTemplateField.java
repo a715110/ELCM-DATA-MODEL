@@ -58,6 +58,22 @@ public class ExtractionTemplateField implements Serializable {
     @Column(name = "display_order", nullable = false)
     private Integer displayOrder;
 
+    /** ADDED 2026-10-14 -- what the field is, as told to the extractor. */
+    @Column(name = "description", length = 1000)
+    private String description;
+
+    /** Words that point to the field in the text, comma separated. */
+    @Column(name = "keywords", length = 500)
+    private String keywords;
+
+    /** The only values the field may have, comma separated; empty means any value. */
+    @Column(name = "allowed_values", length = 1000)
+    private String allowedValues;
+
+    /** One line per allowed value: VALUE: word one, word two. */
+    @Column(name = "value_hints", length = 2000)
+    private String valueHints;
+
     @CreatedBy
     @Column(name = "created_by", updatable = false, length = 255)
     private String createdBy;

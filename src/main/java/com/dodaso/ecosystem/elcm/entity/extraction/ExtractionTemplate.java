@@ -55,6 +55,27 @@ public class ExtractionTemplate implements Serializable {
     @Column(name = "extractor_template_id", length = 100)
     private String extractorTemplateId;
 
+    /**
+     * ADDED 2026-10-14 -- DRAFT (being edited, never used for extraction), PUBLISHED (the version in
+     * use; is_active is true) or RETIRED (an older published version, kept for history).
+     */
+    @Column(name = "status", nullable = false, length = 20)
+    private String status = "PUBLISHED";
+
+    /** The version this one was copied from; null for a first version. */
+    @Column(name = "based_on_id")
+    private Long basedOnId;
+
+    /** Why this version was published (or created). */
+    @Column(name = "change_reason", length = 500)
+    private String changeReason;
+
+    @Column(name = "published_by", length = 255)
+    private String publishedBy;
+
+    @Column(name = "published_at")
+    private LocalDateTime publishedAt;
+
     @CreatedBy
     @Column(name = "created_by", updatable = false, length = 255)
     private String createdBy;
