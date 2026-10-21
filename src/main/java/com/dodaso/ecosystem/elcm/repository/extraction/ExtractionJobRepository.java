@@ -26,4 +26,9 @@ public interface ExtractionJobRepository extends JpaRepository<ExtractionJob, Lo
     int requeueRunning(@Param("queued") com.dodaso.ecosystem.elcm.entity.lookup.LkpExtractionJobStatus queued,
                        @Param("running") com.dodaso.ecosystem.elcm.entity.lookup.LkpExtractionJobStatus running,
                        @Param("ids") Collection<Long> stagedDocumentIds);
+
+    /** ADDED 2026-10-21 (purge job). Removes every extraction job of a document. */
+    @Modifying
+    @Query("DELETE FROM ExtractionJob j WHERE j.stagedDocument.id = :documentId")
+    int purgeByStagedDocumentId(@Param("documentId") Long documentId);
 }
