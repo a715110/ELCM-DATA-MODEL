@@ -28,6 +28,11 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
  * the packages table used created_by as a stand-in because this table had no
  * assignee column (see ContractPackageService). Nullable. See
  * contract_package_assignee.sql for the DDL.
+ *
+ * ADDED 2026-11-09 -- approver: the IAMS login id of the person who has to approve the package.
+ * Set when the review is completed (the person the reviewer picked, or the one ELCM picked), moved
+ * when the approval is handed to someone else, cleared when the review is reopened or sent back,
+ * and set to the person who applied it. Nullable. See contract_package_approver.sql for the DDL.
  */
 @Entity
 @EntityListeners(AuditingEntityListener.class)
@@ -58,6 +63,9 @@ public class ContractPackage implements Serializable {
 
     @Column(name = "assignee_id", length = 255)
     private String assigneeId;
+
+    @Column(name = "approver", length = 255)
+    private String approver;
 
     @CreatedBy
     @Column(name = "created_by", updatable = false, length = 255)
