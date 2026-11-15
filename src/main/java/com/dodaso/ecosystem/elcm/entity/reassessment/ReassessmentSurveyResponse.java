@@ -38,6 +38,24 @@ public class ReassessmentSurveyResponse implements Serializable {
     @JoinColumn(name = "reassessment_case_id", nullable = false)
     private ReassessmentCase reassessmentCase;
 
+    /** ADDED 2026-11-11: the template the survey was made from; informational only. */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "template_id", nullable = true)
+    private ReassessmentSurveyTemplate template;
+
+    /** ADDED 2026-11-11: the questions as they were when the survey was sent (JSON text). */
+    @Column(name = "questions_snapshot", columnDefinition = "LONGTEXT")
+    private String questionsSnapshot;
+
+    @Column(name = "sent_by", length = 255)
+    private String sentBy;
+
+    @Column(name = "sent_at")
+    private LocalDateTime sentAt;
+
+    @Column(name = "due_date")
+    private java.time.LocalDate dueDate;
+
     @Column(name = "business_unit", length = 255)
     private String businessUnit;
 

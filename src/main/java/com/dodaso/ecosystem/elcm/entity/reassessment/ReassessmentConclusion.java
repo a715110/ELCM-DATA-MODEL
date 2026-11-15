@@ -58,6 +58,14 @@ public class ReassessmentConclusion implements Serializable {
     @JoinColumn(name = "approval_decision_id", nullable = true)
     private LkpApprovalDecision approvalDecision;
 
+    /** ADDED 2026-11-11: why the approver rejected the conclusion, or a note on approval. */
+    @Column(name = "approval_comment", length = 1000)
+    private String approvalComment;
+
+    /** ADDED 2026-11-11: false while the assessor is still writing; true once sent for approval. */
+    @Column(name = "is_submitted", nullable = false)
+    private Boolean isSubmitted = Boolean.FALSE;
+
     @Column(name = "approved_by", length = 255)
     private String approvedBy;
 

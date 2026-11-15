@@ -59,6 +59,10 @@ public class ReassessmentCase implements Serializable {
     @JoinColumn(name = "status_id", nullable = false)
     private LkpReassessmentCaseStatus status;
 
+    /** ADDED 2026-11-11: when the survey and the assessment should be done. Optional. */
+    @Column(name = "due_date")
+    private LocalDate dueDate;
+
     @Column(name = "opened_by", nullable = false, length = 255)
     private String openedBy;
 
