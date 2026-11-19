@@ -1,6 +1,7 @@
 package com.dodaso.ecosystem.elcm.repository.pipeline;
 
 import com.dodaso.ecosystem.elcm.entity.pipeline.ContractTerm;
+import java.util.Collection;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -17,4 +18,7 @@ public interface ContractTermRepository extends JpaRepository<ContractTerm, Long
 
     /** The values of a record that a later Apply replaced. */
     List<ContractTerm> findByContractRecord_IdAndSupersededAtIsNotNull(Long contractRecordId);
+
+    /** ADDED 2026-11-16: the terms in force with one of the given field keys, of all records (critical date job). */
+    List<ContractTerm> findBySupersededAtIsNullAndFieldKeyIn(Collection<String> fieldKeys);
 }
