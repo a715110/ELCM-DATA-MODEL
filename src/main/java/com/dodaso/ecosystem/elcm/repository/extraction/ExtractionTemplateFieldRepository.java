@@ -10,4 +10,11 @@ public interface ExtractionTemplateFieldRepository extends JpaRepository<Extract
 
     /** Removes the fields of a draft before they are written again (ADDED 2026-10-14). */
     void deleteByTemplate_Id(Long templateId);
+
+    /**
+     * ADDED 2026-11-21: the fields of one data type (DATE, NUMBER and so on) in templates of one
+     * status (PUBLISHED), for the critical date rule screen's pick lists.
+     */
+    List<ExtractionTemplateField> findByTemplate_StatusAndDataType_CodeOrderByFieldKeyAsc(
+        String status, String dataTypeCode);
 }

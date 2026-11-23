@@ -9,4 +9,10 @@ public interface CriticalDateRuleRepository extends JpaRepository<CriticalDateRu
 
   /** The rules the job applies, oldest first. */
   List<CriticalDateRule> findByEnabledTrueOrderByIdAsc();
+
+  /** ADDED 2026-11-21: every rule, enabled or not, oldest first (the rule admin screen). */
+  List<CriticalDateRule> findAllByOrderByIdAsc();
+
+  /** ADDED 2026-11-21: true when a rule already uses the code (the code is unique). */
+  boolean existsByCode(String code);
 }

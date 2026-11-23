@@ -59,6 +59,10 @@ public class CriticalDateRule implements Serializable {
   @Column(name = "enabled", nullable = false)
   private boolean enabled;
 
+  /** ADDED 2026-11-21: login of the administrator who last changed the rule on the admin screen. */
+  @Column(name = "updated_by", length = 255)
+  private String updatedBy;
+
   @Column(name = "created_at", nullable = false, insertable = false, updatable = false)
   private LocalDateTime createdAt;
 

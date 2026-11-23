@@ -18,4 +18,7 @@ public interface CriticalDateTaskRepository extends JpaRepository<CriticalDateTa
 
   /** Every task in one status (the Critical Dates screen reads the OPEN ones). */
   List<CriticalDateTask> findByStatus(String status);
+
+  /** ADDED 2026-11-21: true when the rule has ever made a task (such a rule cannot be deleted). */
+  boolean existsByRule_Id(Long ruleId);
 }
